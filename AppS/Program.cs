@@ -11,17 +11,25 @@ namespace AppA
             Console.WriteLine("This is app S!");
             string filesDir = "./_files";
             Medium medium = new Medium(filesDir);
-            FileIpc ipc = new FileIpc(medium, 2, 1);
+            FileIpc serverIpc = new FileIpc(medium);
+
+            serverIpc.Bind(1);
+            Console.WriteLine("# server with id 1");
+            serverIpc.Listen(10);
+
+            Console.WriteLine("# waiting for clients...");
+            FileIpc clientIpc = serverIpc.Accept();
+            Console.WriteLine("# new client connected");
 
             Console.WriteLine("# waiting for request...");
-            string incoming = ipc.Receive();
+            string incoming = clientIpc.Receive();
             Console.WriteLine("# got request:");
             Console.WriteLine($"\"{incoming}\"");
             //
             string outgoing = "Hi from S!";
             Console.WriteLine("# sending response:");
             Console.WriteLine($"\"{outgoing}\"");
-            ipc.Send(outgoing);
+            clientIpc.Send(outgoing);
         }
     }
 }

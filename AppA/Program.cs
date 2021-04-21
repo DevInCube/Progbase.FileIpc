@@ -11,7 +11,11 @@ namespace AppA
             Console.WriteLine("This is app A!");
             string filesDir = "./_files";
             Medium medium = new Medium(filesDir);
-            FileIpc ipc = new FileIpc(medium, 1, 2);
+            FileIpc ipc = new FileIpc(medium);
+
+            Console.WriteLine("# connecting to server with id 1...");
+            ipc.Connect(1);
+            Console.WriteLine("# connected to server");
 
             string outgoing = "Hello from A!";
             Console.WriteLine("# sending request: ");
