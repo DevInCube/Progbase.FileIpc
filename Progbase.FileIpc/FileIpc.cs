@@ -35,11 +35,16 @@ namespace Progbase.FileIpc
 
         public void Connect(int serverId)
         {
+            // create own file
             int thisId = _medium.GetNewId();
             this._inputFile = _medium.CreateFilePath(thisId);
-            this._outputFile = _medium.CreateFilePath(serverId);
-            FileSystem.WriteTo(_outputFile, thisId.ToString());
-            FileSystem.ReadFrom(_inputFile);  // ack and ignore
+            // write id to server
+            string serverConnectFile = _medium.CreateFilePath(serverId);
+            FileSystem.WriteTo(serverConnectFile, thisId.ToString());
+            // wait for server new id for this connection
+            string response = FileSystem.ReadFrom(this._inputFile);
+            int pairedId = int.Parse(response);
+            this._outputFile = _medium.CreateFilePath(pairedId);
         }
 
         public void Bind(int serverId)
@@ -78,8 +83,9 @@ namespace Progbase.FileIpc
             }
 
             int firstClientId = _clientIdQueue.Dequeue();
-            FileIpc clientIpc = new FileIpc(_medium, _thisId, firstClientId);
-            clientIpc.Send("ACK");
+            int pairId = _medium.GetNewId();
+            FileIpc clientIpc = new FileIpc(_medium, pairId, firstClientId);
+            clientIpc.Send(pairId.ToString());
             return clientIpc;
         }
     }
