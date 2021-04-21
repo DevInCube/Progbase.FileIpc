@@ -10,9 +10,8 @@ namespace AppA
         {
             Console.WriteLine("This is app S!");
             string filesDir = "./_files";
-            string inFile = Path.Combine(filesDir, "2.txt");
-            string outFile = Path.Combine(filesDir, "1.txt");
-            FileIpc ipc = new FileIpc(inFile, outFile);
+            Medium medium = new Medium(filesDir);
+            FileIpc ipc = new FileIpc(medium, 2, 1);
 
             Console.WriteLine("# waiting for request...");
             string incoming = ipc.Receive();
