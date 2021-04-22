@@ -17,15 +17,20 @@ namespace AppA
             ipc.Connect(1);
             Console.WriteLine("# connected to server");
 
-            string outgoing = "Hello from A!";
-            Console.WriteLine("# sending request: ");
-            Console.WriteLine($"\"{outgoing}\"");
-            ipc.Send(outgoing);
-            //
-            Console.WriteLine("# waiting for response...");
-            string incoming = ipc.Receive();
-            Console.WriteLine("# got response:");
-            Console.WriteLine($"\"{incoming}\"");
+            while (true)
+            {
+                string outgoing = "Hello from A!";
+                Console.WriteLine("# sending request: ");
+                Console.WriteLine($"\"{outgoing}\"");
+                ipc.Send(outgoing);
+                //
+                Console.WriteLine("# waiting for response...");
+                string incoming = ipc.Receive();
+                Console.WriteLine("# got response:");
+                Console.WriteLine($"\"{incoming}\"");
+
+                System.Threading.Thread.Sleep(1000);
+            }
         }
     }
 }
